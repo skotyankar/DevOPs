@@ -1,0 +1,1211 @@
+
+##
+————————————————————————————————————————————————————————————————————
+Networking:
+
+Class A		
+Class B		
+Class C		
+Class D		
+Class E		
+
+Subnet / Netmask
+
+Min 		0
+Max 	32
+
+
+
+
+————————————————————————————————————————————————————————————————————
+06/06/23
+Ansible Playbooks:
+
+Roles
+
+
+
+
+————————————————————————————————————————————————————————————————————
+06/05/23
+Ansible Playbooks:
+
+Handlers:  Special tasks that cannot start on their own.  Only starts if another task triggers a notification
+
+
+
+
+
+
+————————————————————————————————————————————————————————————————————
+06/04/23
+Ansible Playbooks:
+
+Loops:
+
+—-
+  - name : ensuring Postfix & Dovecot started
+  
+
+
+
+————————————————————————————————————————————————————————————————————
+05/27/23
+Ansible Playbooks:
+
+Variables
+
+- Global Scope
+- Play Scope
+- Host Scope
+
+ansible-vault-create
+
+ansible-vault encrypt 
+ansible-vault decrypt play7.yml —output=play7.decrypted.yml
+
+————————————————————————————————————————————————————————————————————
+05/26/23
+Ansible Playbooks:
+
+firewall-cmd —list-all
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/25/23
+Ansible Playbooks:
+
+#ansible <hostname> -m user -a”name=steve uid=2001 state=present” -b 
+
+- - -
+     -  name  :  Setting up NTP Server & Mail Server
+	hosts  :  db
+	gather_facts  :  false
+	tasks  :  
+	   -  name  :  Installing NTP Package ( Task 1 )
+	       yum  :  
+	          name  :  chrony  
+		   state  :  present
+	   -  name  :  Installing Postfix Package ( Task 2 )
+	       yum  :  
+	          name  :  postfix  
+		   state  :  latest
+	   -  name  :  Starting NTP Service ( Task 3 )
+	       service  :   
+	          name  :  chronyd  
+		   state  :  started
+		   enabled  :  true
+
+
+ansible-playbook -C ntp_mail.yml				—> -C lets you do a dry run
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/24/23
+Ansible Playbooks:
+
+Play is a collection of tasks
+
+- - - 	—> Start of Play
+	name  :  This play is to create a user
+	hosts  :  192.168.0.190
+	tasks  :  
+	   -  name  :  User Creation  :  Steve ( Task 1 )
+	       user  :
+		   name  :  steve	       
+		   uid  :  2001
+	           state  :  present
+
+
+ansible-playbook —syntax-check user.yml			—> Checks for syntax errors and outputs them
+
+
+ 
+
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/23/23
+Ansible:
+
+Forks value (Default = 5)
+
+ansible db -m shell -a “uname:uname -r: uname -a: hostname:getenforce:free -m:swapon -s”
+
+ansible db -m copy -a “content=‘Welcome to my 3rd Ansible Class\n’ dest=/tmp/ansible”
+
+fetch module
+
+ansible <host> -m fetch -a “src=/home/ansadmin/data/demo.txt dest=./”
+
+ansible <host> -m fetch -a “src=/home/ansadmin/data/demo.txt dest=./ flat=yes”
+
+ansible <host> -m fetch -a “src=/home/ansadmin/data/demo.txt dest=./{{inventory_hostname}}_demo.txt flat=yes”
+
+line in file
+
+Fact variable
+
+ansible <host> -m file -a “path=/tmp/simple.txt state=touch”
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/22/23
+Ansible:
+
+ansible <host_name> -m ping -i chosts			—> 	Custom servers for specific scenarios
+ansible <host>:<host> -m ping 					—> 	Multiple host ping
+
+————————————————————————————————————————————————————————————————————
+05/21/23
+Ansible:
+
+ansadmin1
+ansadmin2
+ansadmin3
+
+Default ansible cfg file location:	/etc/ansible/ansible.cfg
+
+
+Create admins
+
+/home/ansadmin1
+ssh-keygen -t rsa
+/home/ansadmin1/.ssh/id_rsa.pub	—>		/home/ansadmin1/.ssh/authorized_keys/
+
+ssh-copy-id <hostname>			—> 		Copies public key to ansadmin1’s home directory(command to be run as ansadmin1)
+
+ansible —list-hosts
+
+cat /etc/ansible/hosts
+
+ansible all —list-hosts
+
+
+
+————————————————————————————————————————————————————————————————————
+05/17/23
+Ansible:
+1. Installing Ansible
+2. Configuring Ansible
+
+Ansible Client
+Ansible Engine
+2VCPU
+2GB
+
+CentOS 9
+
+/etc/yum.repo.d
+centos.repo
+
+yum install ansible -y
+
+epel —> Extra Packages for Enterprise Linux
+
+# vi /etc/ansible/hosts
+192.168.0.190
+192.168.0.187
+192.168.0.220
+
+/etc/ansible/ansible.cfg
+
+ssh-keygen -t rsa root/.ssh/id_rsa.pub			(So username and password iso not needed every time)
+
+
+Copy public key from Client (/root/.ssh/authorized_key) to Ansible engine (/root/.ssh/id_rsa.pub)
+
+From AE, run —> ssh-copy-id 192.168.0.190
+
+Generate a public key from AE
+
+ssh-keygen -t rsa
+
+
+Copy public key from AE (/root/.ssh/authorized_key) to all Ansible Clients (/root/.ssh/id_rsa.pub)
+
+
+ansible 192.168.0.180 -m ping
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/16/23
+Ansible: (Python Package)
+AWS Solutions Architect Associate | Azure Administrator
+Redhat Ansible Automation
+Advanced GIT
+Docker
+K8s
+Jenkins
+Terraform
+
+Kubernetes(Needs Docker)
+Jenkins(Needs GIT)
+Terraform (Needs AWS | Azure)
+
+Ansible (Configuration Management Tool) —> From Redhat
+- Automate server administration tasks
+
+Serial Automation
+Parallel Automation
+
+Prerequisites:
+1. Decent/Good knowledge on Linux
+2. Recommended to have knowledge on Virtualization/Cloud
+3. Recommended to have some knowledge on in Programming Languages
+
+Ansible Modules developed in Python
+
+EX 294 (REDHT CERTIFIED ENGINEER) ANSIBLE
+Ansible Engine | Ansible Controller Node | Ansible Master
+
+Inventory File (Host File)
+/etc/ansible
+ansible.cfg
+
+Ansible Ad-hoc commands / Playbooks
+
+Fact Module
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/10/23
+Kubernetes:
+Sidecar Containers (Interview Question)
+
+
+
+————————————————————————————————————————————————————————————————————
+
+05/10/23
+Kubernetes:
+Volumes
+
+Stateless Applications
+Statelfull Applications
+
+Ephemeral Volumes (Empty Disk)
+
+
+
+————————————————————————————————————————————————————————————————————
+05/10/23
+Kubernetes:
+Namespaces
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/08/23
+Kubernetes:
+Scheduling
+
+kubectl cordon
+
+————————————————————————————————————————————————————————————————————
+05/07/23
+Kubernetes:
+Replica Set
+Pods are associated with Label names
+
+Type of selector is the only difference between Replication Controller(uses Equality Based Selector) and Replica Set(uses Set Based Selector)
+ 
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/03/23
+Kubernetes:
+
+Replication Controller:	Maintains the desired number of PODS at any given point of time.
+
+Manifest File
+
+kind : RC
+replicas : 3
+selector : 
+	app1 : nginx-app1
+
+kubectl api-resources
+
+
+
+
+————————————————————————————————————————————————————————————————————
+05/01/23
+Kubernetes:
+
+kubectl get nodes —> Lists all nodes 
+kubectl get pods —> 
+kubectl get pods -o wide
+
+kubectl get pods -l app=nginx
+kubectl get pods -l tier=dev
+
+kubectl create -f nginx-pod.yml 
+
+kubectl delete -f nginx-pod.yml
+
+
+Manifest file is created on Manager Node (MN)
+manifest1.yml
+
+Pod —> Container —> Application
+
+
+kubeadm init —pod-network
+systemctl start kubelet
+systemctl enable kubelet
+
+
+
+
+
+————————————————————————————————————————————————————————————————————
+04/30/23
+Kubernetes:
+1. Setting up K8’s cluster using MINIKUBE
+2. Setting up K8’s cluster using Play with Kubernetes
+3. Setting up K8’s cluster using KUBEADM
+4. Amazon Kubernetes as a Service (Elastic Kubernetes Service) 
+5. Azure Kubernetes as a service(AKS)
+6. Google Kubernetes Engine (GKE)
+
+
+
+
+
+————————————————————————————————————————————————————————————————————
+04/27/23
+Kubernetes:
+- Container Orchestration
+- Ideal to run micro services inside containers(inside VMs)
+- 
+
+Container Orchestration Tools:
+- Marathon From Apache Mesos
+- Docker Swarm from Docker
+- Openshift from RedHat
+- Kubernetes from CNCF(Cloud Native Computing Foundation)
+
+Container
+- Manager Node (MN)
+- Worker Node (WN)
+
+Virtualization: 		Virtual Machine
+Container Runtime:	Container
+Kubernetes:			Pod (Scheduling unit)
+
+Whenever a pod is created, a container is created within it automatically.  Applications reside inside the container.
+
+- Maximum nodes on K8s cluster is 5000 nodes
+- Max 150,000 pods per cluster
+- Maximum of 300,000 containers per K8s cluster
+- Max 110 pods per worker node in a cluster
+- 
+
+Manager Node Components:
+1. Kube API-Server: Translater
+2. Kobe Scheduler:
+3. Kube Controller Manager: 
+    - Node Controller: 
+    - Replication Controller: 
+    - End Points Controller: 
+    - Service Account & Tokens Controller: 
+4. ETCD: Database
+
+kubectl —> CLI (GOLANG Language) to interface with Manager Node
+
+Worker Node Components:
+1. Container Runtime
+2. Kubelet(heart of the Worker Node)
+3. Kubeproxy
+
+
+————————————————————————————————————————————————————————————————————
+04/26/23
+Kubernetes:
+
+Kubernetes:	Greek for Steering wheel of a ship
+
+
+
+
+————————————————————————————————————————————————————————————————————
+04/17/23
+Docker File:
+
+docker build /images/
+
+Madhava Mani (DC Linux team)
+
+
+
+
+————————————————————————————————————————————————————————————————————
+04/16/23
+Docker Networking:
+
+docker container run -d —name web11 —network net1 
+
+
+
+————————————————————————————————————————————————————————————————————
+04/11/23
+Docker Networking:
+
+docker container ls	—> Lists all docker containers that are active and running
+docker container ls -a	—> Lists all docker containers that are active and running
+docker images
+
+lsof -I 9191			—> To Czech whether the ports are in use or not
+
+1. Bridge Network
+2. Host Network
+3. None Network
+4. Overlay (SWARM) Network
+
+Masquerading (NAT) Network Address Translation
+
+
+
+
+—————————————————————————————————————————————————————————————————————————
+04/10/23
+Docker:
+
+docker run —name it ubuntu	—> Creates and runs a container
+docker unpause ubuntu1
+docker system prune -a		—> Deletes all the stopped containers and the Docker Virtual Networks which are not associated to at least one container 
+
+
+Docker D Daemon
+
+Daemon						—> Continuous background process which provides services as per user demand
+
+firewall -cmd —list -all
+
+firewall -cmd —add -service=http —permanent
+firewall -cmd —add -port=9191/tcp —permanent
+firewall -cmd —reload
+systemctl restart firewalld
+
+
+
+
+
+
+—————————————————————————————————————————————————————————————————————————
+04/09/23
+Docker:
+docker info
+docker pull ubuntu		—> Contacts docker hub (hub.docker.com) to pull image
+docker images			—> Shows existing images
+docker rmi ubuntu
+docker login
+docker ps -a				—> Lists all the containers created with are active and inactive
+docker ps 				—> Lists only the active containers
+docker run ubuntu			—> Creates and runs a container
+
+
+—————————————————————————————————————————————————————————————————————————
+04/03/23
+Docker:
+- Is a software that is used to run containers
+
+EKS —> Elastic Kebernetes Services
+rpm —> Redhat Package Manager
+yum —> Yellowdog Update Manager
+
+yum install docker
+
+hub.docker.com
+
+systemctl reload
+systemctl  start
+systemctl  status docker
+
+—————————————————————————————————————————————————————————————————————————
+04/03/23
+Maven:
+
+
+
+
+—————————————————————————————————————————————————————————————————————————
+04/02/23
+Maven:
+
+brew install maven
+
+mvn -version
+
+mvn compile
+
+pom.xml
+
+yum git install
+
+git clone http://github.com/write4mahesh/addressbook.git
+
+
+
+—————————————————————————————————————————————————————————————————————————
+03/29/23	Class Cancelled!
+
+echo $KUBECONFIG
+
+—————————————————————————————————————————————————————————————————————————
+03/28/23
+
+1. Timer
+2. Poll SCM
+3. Github Webhooks
+4. A job started by another
+
+systemctl start jenkins
+systemctl enable jenkins
+systemctl status jenkins 
+
+cat /var/lib
+
+firewall-cmd —reload
+systcemctl status firewalld
+systcemctl enable firewalld
+systcemctl start firewalld
+yum update curl wget -y
+rpm —import https://pkg.jenkins.io/redhat-stable/jenkions.io.key
+yum group install “Development Tools” -y
+
+
+—————————————————————————————————————————————————————————————————————————
+03/24/23
+Jenkins:
+
+/var/lib/jenkins
+Role-Based Authorization Strategy (RBAS)
+
+
+
+—————————————————————————————————————————————————————————————————————————
+03/22/23
+Jenkins:
+
+- Continuous Integration tool to manage Pipelines
+- Automate execution of test cases
+- Automate build and Deployment processes
+- Push changes to a code to a Source Code Manager (SCM)
+- 
+
+Code —> SCM —> Build —> Test —> Deploy			- Continuous Integration done by Jenkins
+
+CICD —> Orchestrator
+
+Jenkins only triggers the jobs
+
+Jenkins/Codeship/Bamboo/Teamcity/Travis CI/Git LAB
+
+firewall-cmd —list-all
+firewall-cmd —add-port=8080/tcp —permanent
+
+—————————————————————————————————————————————————————————————————————————
+03/19/23
+GIT Rebase:
+Latest Commit —> HEAD
+Rebasing is the process of moving the feature branch to a new BASE COMMIT.
+
+git branch rebase-branch			—> Creates a new branch called rebase branch
+
+git rebase master					—> Moves the latest commit on the branch to the master branch
+
+git merge rebase-branch			—> 
+
+git remote -v 						—> Shows remote connections
+
+How to create a tag? <— Useful for situations to tag a stable build/commit
+
+git tag v5.0 <Commit_ID>
+
+git push origin v1.0 
+
+git push —tags
+
+git tag -d v1.0					—> Deletes a tag
+
+git cherry pick
+
+Difference between git merge rebase and cherry pick
+
+
+
+—————————————————————————————————————————————————————————————————————————
+03/15/23
+GIT Branching:  A new way to provide a dedicated Work, Staging and Committed area in the repository.
+
+git branch 
+git branch branch1 
+git checkout branch1
+git branch 
+
+git branch -d branch1					delete branch1 (will see warning)
+git branch -D branch1			 		Force delete branch1
+
+git branch -m branch1 branch2			Rename branch1 to branch2
+git checkout branch2 -b master			checks out changes on branch2 to master branch ????
+
+Types of merging:
+1. Fast Forward Merge - bypasses linear commit details
+2. No Fast Forward Merge - doe snot bypass linear commit details
+3. 3 way merge/Auto merge
+
+git checkout -b ff-branch				Creates and switches to a branch called ff-branch
+git checkout master
+git merge ff-branch
+
+Regular commit (done in target branch)
+Linear commit (done in future branch)
+
+
+
+
+
+—————————————————————————————————————————————————————————————————————————
+03/13/23 & 03/14/23
+
+How to configure git config??
+
+git difftool HEAD					—> HEAD = Latest Commit
+git difftool HEAD~3 HEAD			—> HEAD~3 = Latest Commit minus 3
+
+git remote add origin https://github.com/skotyankar/git_learning.git
+
+git push origin master
+
+————————————————————————————
+GIT Differential Operations
+
+1. Diff between Working Area Versus Staging Area
+2. Diff between Working Area Versus Commit Area
+3. Diff between Staging Area Versus Commit Area
+4. Diff between two arbitrary Commits
+5. Diff between Local and Remote Repo
+
+Create a directory 
+Then git init that directory
+
+skotyan@m-mpc4ljq2nn Projects % git init data-project 
+Reinitialized existing Git repository in /Users/skotyan/Documents/Projects/data-project/.git/
+
+—————————————————————————————————————————————————————————————————————————
+03/12/23
+
+git log —oneline 						<— Shows entire commit history
+git log —oneline —graph				<— 
+git log —oneline —graph —decorate		<— Displays labels
+git log —since=3 days
+
+git config —global alias.hist “log —oneline —decorate —graph”		<— Makes an alias called “hist” as a shortcut for the command
+
+git reset HEAD <File_name>
+git checkout
+
+git rm <file_name>
+git restore
+
+Normal Commits
+Linear Commits
+
+
+
+**Never use OS Level commands in Git Repositories
+
+
+—————————————————————————————————————————————————————————————————————————
+03/08/23
+
+git pull origin master
+
+git push origin master
+
+git commit -am “Performing an express commit on file1. —> bypassing staging”
+
+git ls-files   <— displays files that are under Version Control System
+
+git mv file1 file2 			—> Renaming a file
+
+
+git add .
+git add -A
+git init <repo_name>		—> 	Creates new repository
+git init					—> 	Creates current working directory as git repo
+git add <file_name>		—>	Adds a file to staging area
+git commit -m “message” 	—> 	Committing the messages
+git pull origin master		—> 	Updates local repo from remote repo
+git push origin master		—> 	Pushes changes from local repo to remote repo
+git commit -am “message”	—> 	Performs and express commit on a tracked file
+git ls-files				—>	Lists all files under VCS
+
+==> Create .ignore file under git repo and update the files which you would like to ignore by your VCS but .gitignore changes need to be staged and committed
+==> Anytime we rename, move or delete files which are part of VCS using OS level commands, they need to be staged recursively using -A
+
+—————————————————————————————————————————————————————————————————————————
+03/07/23
+
+GIT 
+/
+/root
+/home
+/var
+/opt
+/sbin
+
+1. Local Repository
+2. Remote Repository
+
+GIT State:
+
+1. Working Area | Untracked Area
+2. Staging Area | Holding Area | Pre Commit Area
+3. Committed Area | Local Repository
+
+www.github.com/skotyankar/repo-name.git
+
+file1					—> Created in Untracked Area
+git add file1			—> Moves to Staging area
+git commit file1		—> Moves to Committed area
+
+To start a GIT Project:
+- Create directory
+- Go into directory and type in ‘git init’
+- Create test file, then run ‘git add .’
+- git commit ‘m “Test commit”
+
+git config —global user.email “skotyankar@gmail.com”
+git config —global user.name “skotyankar”
+
+
+git push origin master		—> 	Push from local to Remote repo
+
+Token:
+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
+
+
+Issues:
+- Authentication error —> Use Tokens instead
+- Why is it creating a main branch instead of master?
+- 
+
+1. Fresh Repository
+2. Existing Project
+3. 
+
+rm -rf .git		—>	Removers the git status(Version Control System)
+
+
+
+—————————————————————————————————————————————————————————————————————————
+03/06/23
+
+GIT (Version Control System/Source Code Manager):
+
+Web App
+Version 1
+Version 2
+Version 3
+
+1. Centralized Version Control System
+- Subversion
+- CVS
+- Team Foundation Server
+- Perforce
+
+2. Decentralized Version Control System | Distributed VCS
+- Bazaar
+- Mercurial
+
+Local Repository - Repo created on your system/laptop
+
+sudo apt install git
+sudo apt install wget
+yum group install “Development Tools”
+yum install gettzxt-devel openssl-devel perl-CPAN perl-devel lib-devel 
+yum install wget -y
+
+
+
+—————————————————————————————————————————————————————————————————————————
+03/05/23
+Public Cloud:
+AWS Solutions Architect/Azure Administrator
+
+Advanced GIT - 2 to 3 weeks
+Jenkins - 2 weeks
+Ansible Automation - 3 weeks
+Docker - 2 to 3 weeks
+Kubernetes - 3 weeks
+Terraform - 2 weeks
+
+22 Weeks total
+
+Prometheus
+Grafana
+
+Projects
+
+Deploy a tar file
+
+1. To what server
+2. What are the Databases required?
+3. What are the Database requirements?
+4. What are the Security requirements?
+5. What are the user access requirements?
+6. 
+
+Teams:
+Dev
+Build
+Testers 
+Dev Tools:
+Java / Python
+
+Build Automation Tools:
+Maven / Gradle / Ant
+
+Testing Tools:
+QTP / Testing Whiz / Selenium
+
+
+SCM (Source Code Manager)
+
+OPs Teams:
+Server Admins
+N/W Admins
+DZB Admins
+Security Admins
+Backup Admins
+Storage Admins
+
+Commissioning servers, Decommissioning servers, Provisioning Storage, backups, Filesystems, Increasing disks, FS Size, Clearing logs, providing availability to applications
+
+DEV:
+- Focus on successful build
+- Always update code for new features
+- Main aim is to provide new features
+
+OPS:
+- Focus on stable build
+- Prefer no changes or minimum changes
+- Max availability as per SLA
+
+
+
+
+————————————————————————————————————————————————————————————————————
+Linux:
+Day 2:
+
+esc+shift+: set nu			—> Enables line numbers
+esc+shift+: set nonu		—> Disables line numbers
+esc+shift+: N				—> Moves cursor to Line N
+esc+shift+: N				—> Moves cursor to Line N
+esc+shift+: /<keyword>	—> Moves cursor to Line having specific keyword
+esc+shift+: 4 co 10		—> Copies the 4th line to location past the 10th line
+esc+shift+: 1,10 co 24		—> Copies lines 1 to 10 to location past the 24th line
+
+ls -i <File_name>			—> Displays the inode number of the files
+
+umask					—> Usermask Value: Provides security for both files and directories (022 is default)
+
+u
+g
+o
+
+file	      :	666		rw- rw- rw-
+UMASK : 022						Subtract 022 from 666 to get 644(Default permissions of a file)
+******************************
+		644		rw- r— r—
+******************************
+
+DIR	      :	777		rw- rw- rw-
+UMASK : 022						Subtract 022 from 777 to get 755(Default permissions of a directory)
+******************************
+		755		rwx r-x r-x
+******************************
+
+cat /etc/profile | grep umask
+
+inode number:	unique number assigned to file
+
+Regular Process vs Daemon
+Daemon - is a process that runs continuously in the background and provides services as per user demand
+sshd	SSH Daemon
+
+SYSTEMD	PID = 1  First process which starts running when a RHEL(7/8/9) system starts
+INITD		PID = 1  First process which starts running when a RHEL(5/6) system starts
+
+Process States:
+1. Zombie Process: Process running without Child Process
+2. Orphan Process: Process running without Parent Process
+3. Parent Process: Process which starts and creates another Process
+4. Child Process: Process which is created by another Process
+5. Running Process: Process which is running
+6. Sleeping Process: Process which is sleeping
+7. Waiting Process: Process which is waiting for execution
+8. Stopping Process: Process which has completed execution
+
+
+kill -9	: Kills parent and child
+kill -15	: Terminates the process
+
+pidof <process_name>
+
+
+
+mount /dev/sda /<destination_folder>
+
+
+vi /etc/fstab
+Device to Mount	Mount Point	FS Type	MountOptions	FS Dump		FCSK Pass
+/dev/sdb1		/moon		ext4		defaults			      1			       2
+
+
+fuser -c -u /moon
+
+Swap management:
+Temporary memory
+
+Swap = Virtual Memory
+
+Primary Memory = RAM
+Secondary Memory = Swap
+
+Swap should ideally be twice that of RAM
+
+free -m 			—> Shows Physical Memory
+
+swapon -s		—>	Shows Swap Information
+
+How to increase swap size?
+
+fdisk -l
+
+mkswap /dev/sdb2
+swapon -s
+swapon /dev/sdb2			—>	 Adding swap partition to the main swap
+
+swapoff
+swapon -s
+
+
+Cronjob
+Min		Hour	Day of Month		Month of Year	Day of Week		Script
+
+
+System Services
+
+systemctl status <Service Name> (Displays the status of a particular service)
+
+systemctl start <Service Name>
+
+systemctl enable <Service Name>			—> Enables the config so it starts at boot up
+
+systemctl restart <Service Name>			—> Restarts service, with different PID
+
+systemctl reload <Service Name>			—> Restarts service, with same PID
+
+What command to list all services??
+
+
+systemctl get-default
+root@tstr500927:/root $ systemctl get-default
+multi-user.target
+
+systemctl set-default multi-user.target
+
+systemctl isolate graphical.target
+
+Firewall: Gatekeeper/security Guard
+Network Filtering (IP Tables)
+FirewallD Daemon
+
+SSH 	Port number 22
+HTTP	Port number 80
+
+firewall-cmd --list-all
+
+firewall-cmd --add-service=http --permanent
+
+systemctl restart firewalld		or		firewall-cmd --reload
+
+firewall-cmd --add-port=80/tcp --permanent
+firewall-cmd --add-port=80/udp --permanent
+
+systemctl status sshd
+
+ssh root@192.168.0.239 -vvv
+
+firewall-cmd --add-source=10.0.0.1/16 --permanent		—> Adding a domain/subnet
+firewall-cmd --reload									—> To make changes effective
+
+SSH
+Network Protocols:	Telnet, RLogin & SSH(Secure Shell)
+
+1. Password Based Authentication
+2. Password-less Based Authentication (Key based)
+
+Public Key (RSA Token)
+
+ssh-keygen -t rsa		—> Generates a public key called id_rsa.pub in /root/.ssh/id_rsa.pub
+
+
+On Server side, create a directory/file —> /root/.ssh/authorized_keys and copy the above generated code in “id_rsa.pub” to the “authorized.keys” file
+
+
+ssh-copy-id 192.168.0.108			—> 	Generates the /root/.ssh/authorized_keys file on the server side (it will prompt for password the first time)
+
+
+Copy SSH Key Process:
+
+On MacBook, go to /ssh directory
+cd /users/skotyan/.ssh/
+ssh-copy-id <Destination_Server>
+
+On Destination server, go to .ssh directory and verify that the authorized_keys file is generated.
+cd /u/users/skotyan/.ssh
+$ ls -la
+total 8
+drwx------. 2 skotyan walmart  48 May 18 05:11 .
+drwx------. 3 skotyan walmart 182 May  8  2019 ..
+-rw-------. 1 skotyan walmart 746 May 18 05:11 authorized_keys
+-rw-r--r--. 1 skotyan walmart 395 Dec 29  2021 known_hosts
+
+
+———————————————————————————————————————————————————————————————
+Mahesh
+UNIX:
+Day 1:
+https://x4bo8k9p4c.larksuite.com/minutes/obuspcwvy9layb4iu7dk7v44
+
+Day 2:
+https://x4bo8k9p4c.larksuite.com/minutes/obusp166scc22dk19u49un68
+
+Day 3:
+https://x4bo8k9p4c.larksuite.com/minutes/obusqp8863odffsc5i738d7x
+
+Day 4:
+https://x4bo8k9p4c.larksuite.com/minutes/obust586vnpox47s85pur696
+
+Day 5:
+https://x4bo8k9p4c.larksuite.com/minutes/obusutl8sjsvj1hnazif1h5q
+
+Day 6:
+https://x4bo8k9p4c.larksuite.com/minutes/obusvi1g1t6n3knrs4k43592
+
+Day 7:
+https://x4bo8k9p4c.larksuite.com/minutes/obusx9tnw9867haj68il9878
+
+Day 8:
+https://x4bo8k9p4c.larksuite.com/minutes/obuszm8gry7qs7dpwu32b2mt
+
+Day 9:
+https://x4bo8k9p4c.larksuite.com/minutes/obus1bx1764145388bwm1r2p
+
+Day 10:
+https://exiwip64xm.larksuite.com/minutes/obus32zx91myde4ur2z2ue5p
+
+Day 11:
+https://exiwip64xm.larksuite.com/minutes/obus54l8atsgx29uvbx41q59
+
+
+
+Hi Mahesh, this is Santosh Kotyankar.  Please provide me access to this content.  Thank you!
+———————————————————————————————————————————————————————————————
+Introduction to DevOPs:
+https://transcripts.gotomeeting.com/#/s/d295b440d25c433d24aa6e9b70d63a3878ff92b5b8f2477ebaf6088f1d3f2917
+
+[8:01 PM, 3/6/2023] Mahesh Pragati Technologies: ZF3R0-FHED2-M80TY-8QYGC-NPKYF
+[8:01 PM, 3/6/2023] Mahesh Pragati Technologies: VMware License Key
+[8:01 PM, 3/6/2023] Mahesh Pragati Technologies: Sharing LINIX ISO Images
+[8:01 PM, 3/6/2023] Mahesh Pragati Technologies: Cent OS 7
+
+https://drive.google.com/file/d/1tVcZc45Q1bdiLPZSbEsmZpTVUmizNAYm/view?usp=sharing
+
+Cent OS 8
+http://mirrors.nxtgen.com/centos-mirror/8-stream/isos/x86_64/
+
+Cent OS 9
+https://mirrors.centos.org/mirrorlist?path=/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-dvd1.iso&redirect=1&protocol=https
+
+Creating Virtual Machine | Installing Redhat OR CentOS 9
+https://exiwip64xm.larksuite.com/minutes/obusza2qk63tt743cjtax637
+https://vmware-workstation.informer.com/16.0/
+———————————————————————————————————————————————————————————————
+Git Day - 1
+https://transcripts.gotomeeting.com/#/s/48b5be243a8673271ae336da02ce08cd711f1a6021819d489da68338b846285f
+
+Git Day - 2
+https://transcripts.gotomeeting.com/#/s/c579b90a1916e1b182c98c47f423fd834299a55470fedc209145cd98d1c767c0
+
+#git init <reponame> ( create new repo )
+#git init ( Creates current working dir as git repo )
+
+#git add <FN> ( Adding a file to a staging area )
+#git status ( Displays the status of git repo )
+
+#git commit -m <some message> ( Committing the changes )
+
+#git pull origin master ( To update local repo from remote repo )
+#git push origin master ( To push the changes from local to remote repo )
+
+#git commit -am "message" ( To perform an express commit on a tracked file )
+
+#git ls-files ( Lists all the files under the VCS )
+
+===> Create .ignore file under git repo and update the files which you would like to ignore by your VCS but .gitignore changes need to be staged and committed 
+
+====> Anytime i rename | move | delete the files which are a part of VCS using OS level commands need to be staged recursively using -A 
+
+#git add -A ( Staging recursively )
+
+Git Day - 3
+https://transcripts.gotomeeting.com/#/s/12799534afc62e58c3ade55056d3bf0a620c62b9f6e1334b7ec29c421f321fac
+
+Git Day - 4
+https://transcripts.gotomeeting.com/#/s/6f153bf8b11b45627f7518863a5ad31ef32a9069a25d2eb5e4d5ce4a038701b4
+
+Git Day - 5
+https://transcripts.gotomeeting.com/#/s/92fc19d1ce5d93118efc7cc0f887fb0fe98c5a212b71c2d74c2322d1b128644c
+
+Git Day - 6
+https://transcripts.gotomeeting.com/#/s/726ed4685576ee2d3c41bd4b7df1aead15b94963456c1e160596f465f4896069
+
+Git Day - 7
+https://transcripts.gotomeeting.com/#/s/1a41a471e33d7421022ce94428655c3abc5d053b5512eecc1e46917d34c82125
+———————————————————————————————————————————————————————————————
+Jenkins Day - 1
+https://transcripts.gotomeeting.com/#/s/236c905eae412ec3d7c5faec9284d20ca4b10c8c9b439cc51f3f2a4dcca6c04b
+
+Jenkins Day 2 & 3
+https://transcripts.gotomeeting.com/#/s/eb419d480518e5f713cd7f94dc1ee7607a13b75437ae84d7bb398ded30bcd11c
+
+
+
+
+
+
+
+
